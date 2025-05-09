@@ -1,103 +1,171 @@
-import Image from "next/image";
+"use client"
+
+import Link from "next/link";
+import Check from "./components/Check/Checks";
+import Solucoes from "./components/Solucoes/Solucoes";
+import { useEffect, useState } from "react";
+
+function completarZeroEsquerda(qtdDigito:number, numero:number) {
+  const numeroString = numero.toString()
+
+  if (numeroString.length < qtdDigito) {
+    let quantosZerosFaltam =  qtdDigito - numeroString.length
+    let numeroFormatado = numeroString
+    while(quantosZerosFaltam > 0) {
+      numeroFormatado = "0" + numeroFormatado
+      quantosZerosFaltam = quantosZerosFaltam - 1
+    }
+    return (numeroFormatado)
+  }
+  return (numeroString)
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+const [mensagemSucesso, setMensagemSucesso] = useState('')
+const [loading, setLoading] = useState(false)
+
+const handleSubmit = async (event:any) => {
+
+  const data = new Date()
+
+  const dia = completarZeroEsquerda(2, data.getDate())
+  const mes = completarZeroEsquerda(2, data.getMonth() + 1)
+  const ano = data.getFullYear()
+  const hora = data.getHours()
+  const minuto = data.getMinutes()
+
+  const dataAtual = `${dia}/${mes}/${ano} ${hora}:${minuto}`
+
+  setLoading(true)
+  event.preventDefault();
+  const baseUrl = "https://script.google.com/macros/s/AKfycbyvzW4g-zcKzeV3S0IilD5MKtLig51PtgahfRkSxVGlwchR42q3fH0YWP7e_wK5qHX6VQ/exec"
+  
+  await fetch(baseUrl,{
+    method:"POST",
+    headers: {
+      "Content-Type" : "application/x-www-form-urlencoded"
+    },
+    body:(`nome=${event.target.nome.value}&telefone=${event.target.telefone.value}&email=${event.target.email.value}&descricao=${event.target.descricao.value}&date=${dataAtual}`)
+  }).then(res => res.text()).then(data => {
+    console.log(data)
+    if (data == "200"){
+      setLoading(false)
+      setMensagemSucesso("Sua Mensagem foi adicionada com sucesso, um de nossos colaboradores entrará em contato com você em breve")
+    }
+  }).catch(error => console.log(error))
+}
+
+useEffect(() => {
+}, [loading])
+  
+
+  return (
+    <div className="font-[Poppins] ">
+      <div className="m-[3em] flex flex-col items-center">
+        {mensagemSucesso != '' ? (
+          <div className="flex relative p-[1em] w-[80%] ml-auto items-center justify-between mr-auto mb-[-1.5em] text-center rounded-2xl bg-green-500 shadow-lg shadow-green-700 inset-shadow-sm inset-shadow-green-700 animate-fade-down animate-once animate-ease-out animate-normal max-w-[400px]">
+            <div className="flex mr-[1em]">
+              <img src="/img/checkSucess.png" alt="Sucess" className="bg-white rounded-full p-[20px] w-[80px]"/>
+            </div>
+            <div className="text-left">
+              <p className="font-[Poppins] text-white font-bold">Prontinho!</p>
+              <p className="text-[0.9em] text-white">Um de nossos consultores entrará em contato com você!</p>
+            </div>
+          </div>
+        ) : (
+          <h1 className="font-bold text-center mb-[2em]">Seja bem vindo! Estamos muito felizes de ter você aqui!</h1>
+        )}
+        <div className="flex justify-center items-center bg-[#FF6600] p-[1em] = rounded-lg shadow-lg shadow-[#000]/40 max-w-[700px]">
+          <form className="bg-[url('/img/background.png')] bg-center bg-cover bg-no-repeat text-white p-[1em] rounded-lg" onSubmit={handleSubmit}>
+            <input type="text" placeholder="Nome ou Apelido" id="nome" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]" />
+            <input type="email" placeholder="E-mail" id="email" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]"/>
+            <input type="tel" placeholder="Telefone" id="telefone" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]"/>
+            <textarea id="descricao" placeholder="Por que você quer falar com a gente" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em] h-[159px]"></textarea>
+            <div className="w-full flex justify-end">
+              <button className="text-right py-[0.3em] px-[1em] text-[0.8em] bg-white text-[#FF6600] rounded-lg mt-[1em] hover:bg-[#fffc] transition-all disabled:bg-gray-600/20 disabled:text-gray-950/20 " disabled={mensagemSucesso !== ''}>{loading ? (
+                <img src="/img/loader.png" alt="Load" className="w-[1.5em] animate-spin"/>
+              ) : (
+                'Enviar'
+              )}</button>
+            </div>
+          </form>
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+      <div className="bg-white flex items-center justify-center">
+        <div className="flex items-center px-[3em] pt-[2em] max-w-[700px]">
+          <img src="/img/imagemFamilia.png" alt="Familia" className="mr-[1em] h-[250px]"/>
+          <div className="text-[0.8em]">
+            <h2 className="font-bold mb-[1em]">Sua Saúde e Segurança em Boas Mãos</h2>
+            <p>Na Optas Consultoria, entendemos que cuidar da saúde e proteger o que é importante para você e sua empresa vai além de uma simples escolha, é uma decisão estratégica!</p>
+            <br />
+            <p>Com ampla experiência no mercado de saúde suplementar e seguros, oferecemos soluções personalizadas e acompanhamento próximo em todas as etapas. </p>
+          </div>
+        </div>
+      </div>
+      <div className="bg-white flex justify-center">
+        <div className="bg-white px-[3em] pt-[2em] pb-[3em] max-w-[700px]">
+          <h3 className="font-bold pb-[0.5em]">Por que escolher a Optas Consultoria?</h3>
+          <Check>Especialização em Saúde Suplementar</Check>
+          <Check>Atendimento Humano e Consultivo</Check>
+          <Check>Transparência em Todos os Processos</Check>
+          <Check>Ampla Rede de Parceiros e Operadoras</Check>
+          <Check>Gestão Contínua e Pós-venda Ativo</Check>
+          <Check>Soluções Inteligentes para Redução de Custos</Check>
+        </div>
+      </div>
+      <div className="flex justify-center">
+        <div className="bg-white m-[3em] p-[2em] rounded-4xl text-[0.8em] max-w-[700px]">
+          <h4 className="font-bold mb-[1em]">Para quem é a Optas?</h4>
+          <p className="text-[#FF6600] mb-[0.5em]">Se você busca por planos de saúde ideais, gestão completa de benefícios, seguros com respaldo técnico e um atendimento humano e confiável... </p>
+          <p className="text-[#FF6600] font-bold italic">Você está no lugar certo!</p>
+        </div>
+      </div>
+      <div className="bg-white p-[3em]">
+        <h5 className="text-[#FF6600] text-center font-bold">Soluções sob medida!</h5>
+        <p className="text-center text-[0.8em] mb-[0.5em]">Conheça nossos serviços personalizados:</p>
+        <div className="bg-white flex justify-center">
+          <div className="flex justify-between max-w-[700px]">
+            <div className="flex flex-col items-center mr-[0.8em]">
+              <p className="mt-[0.8em] mb-[0.5em] text-[0.9em] text-[#FF6600] font-bold">Para você:</p>
+              <Solucoes icone="coracao">Seguro Saúde e Odontológico</Solucoes>
+              <Solucoes icone="curativo">Seguro de Vida</Solucoes>
+              <Solucoes icone="carro">Seguro Auto/Moto</Solucoes>
+              <Solucoes icone="casa">Seguro Patrimonial</Solucoes>
+              <Solucoes icone="aviao">Seguro Viagem</Solucoes>
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="mt-[0.8em] mb-[0.5em] text-[0.9em] text-[#FF6600] font-bold">Para sua empresa:</p>
+              <Solucoes icone="coracao">Seguro Saúde e Odontológico</Solucoes>
+              <Solucoes icone="curativo">Seguro de Vida em Grupo</Solucoes>
+              <Solucoes icone="predio">Seguro Empresarial</Solucoes>
+              <Solucoes icone="escudo">Riscos Digitais</Solucoes>
+              <Solucoes icone="trabalhador">Responsabilidade Civil</Solucoes>
+            </div>
+          </div>
+        </div>
+        <p className="font-bold text-[#FF6600] text-center text-[0.9em] mt-[1em]">E o melhor: temos ainda mais para oferecer!</p>
+      </div>
+      <div className="bg-[url('/img/backgroundRetangulo.png')] flex flex-col justify-center items-center bg-center bg-cover bg-no-repeat text-white p-[3em]">
+        <div className="flex items-center justify-center mb-[1em]">
+          <img src="/img/sms.png" alt="Icone caixa de dialogo" className="mr-[1em]"/>
+          <h6 className="font-bold text-[0.9em]">Ficamos no aguardo do seu contato!</h6>
+        </div>
+        <img src="/img/corporativo.png" alt="Equipe" />
+        <div className="bg-[#F9F9F93D] p-[1em] text-[0.8em] mt-[1em] rounded-lg max-w-[700px]">
+          <p>Estamos prontos para ouvir você e encontrar a melhor solução para o seu momento. Seja para proteger sua família, sua empresa ou seu futuro, conte com o cuidado e a experiência da Optas.</p>
+          <br />
+          <p>Preencha o formulário e fale com um de nossos consultores — vamos juntos construir um caminho mais seguro e tranquilo.</p>
+          <br />
+          <p>Aproveite e acompanhe nossas redes sociais para ficar por dentro de dicas, novidades e conteúdos que podem facilitar sua vida!</p>
+        </div>
+        <div className="flex justify-center mt-[2em]">
+          <Link href="https://www.facebook.com/optasconsultoria/" className="cursor-pointer"><img src="/img/facebook.png" alt="Facebook icon" className="mr-[1em]"/></Link>
+          <Link href="https://www.instagram.com/optasconsultoria/" className="cursor-pointer"><img src="/img/instagram.png" alt="Instagram icon" className="mr-[1em]" /></Link>
+          <Link href="https://br.linkedin.com/company/optas-consultoria" className="cursor-pointer"><img src="/img/linkedn.png" alt="Linkedn icon"/></Link>
+        </div>
+      </div>
     </div>
   );
 }
