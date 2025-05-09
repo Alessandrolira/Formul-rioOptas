@@ -39,9 +39,15 @@ const handleSubmit = async (event:any) => {
 
   setLoading(true)
   event.preventDefault();
-  const baseUrl = "https://script.google.com/macros/s/AKfycbyvzW4g-zcKzeV3S0IilD5MKtLig51PtgahfRkSxVGlwchR42q3fH0YWP7e_wK5qHX6VQ/exec"
-  
-  await fetch(baseUrl,{
+  const baseUrl = process.env.NEXT_PUBLIC_API_KEY;
+
+  if (!baseUrl) {
+    console.error("API key is not defined in the environment variables.");
+    setLoading(false);
+    return;
+  }
+
+  await fetch(baseUrl, {
     method:"POST",
     headers: {
       "Content-Type" : "application/x-www-form-urlencoded"
@@ -83,7 +89,7 @@ useEffect(() => {
             <input type="tel" placeholder="Telefone" id="telefone" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]"/>
             <textarea id="descricao" placeholder="Por que você quer falar com a gente" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em] h-[159px]"></textarea>
             <div className="w-full flex justify-end">
-              <button className="text-right py-[0.3em] px-[1em] text-[0.8em] bg-white text-[#FF6600] rounded-lg mt-[1em] hover:bg-[#fffc] transition-all disabled:bg-gray-600/20 disabled:text-gray-950/20 " disabled={mensagemSucesso !== ''}>{loading ? (
+              <button className="text-right py-[0.3em] px-[1em] text-[0.8em] bg-white text-[#FF6600] rounded-lg mt-[1em] hover:bg-[#fffc] transition-all disabled:bg-gray-600/20 disabled:text-gray-950/20 cursor-pointer " disabled={mensagemSucesso !== ''}>{loading ? (
                 <img src="/img/loader.png" alt="Load" className="w-[1.5em] animate-spin"/>
               ) : (
                 'Enviar'
