@@ -67,7 +67,7 @@ useEffect(() => {
   
 
   return (
-    <div className="font-[Poppins] ">
+    <div>
       <div className="m-[3em] flex flex-col items-center">
         {mensagemSucesso != '' ? (
           <div className="flex relative p-[1em] w-[80%] ml-auto items-center justify-between mr-auto mb-[-1.5em] text-center rounded-2xl bg-green-500 shadow-lg shadow-green-700 inset-shadow-sm inset-shadow-green-700 animate-fade-down animate-once animate-ease-out animate-normal max-w-[400px]">
@@ -75,7 +75,7 @@ useEffect(() => {
               <img src="/img/checkSucess.png" alt="Sucess" className="bg-white rounded-full p-[20px] w-[80px]"/>
             </div>
             <div className="text-left">
-              <p className="font-[Poppins] text-white font-bold">Prontinho!</p>
+              <p className="text-white font-bold">Prontinho!</p>
               <p className="text-[0.9em] text-white">Um de nossos consultores entrará em contato com você!</p>
             </div>
           </div>
