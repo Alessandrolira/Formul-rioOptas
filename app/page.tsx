@@ -87,9 +87,9 @@ useEffect(() => {
             <input type="text" placeholder="Nome ou Apelido" id="nome" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]" />
             <input type="email" placeholder="E-mail" id="email" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]"/>
             <input type="tel" placeholder="Telefone" id="telefone" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]"/>
-            <textarea id="descricao" placeholder="Por que você quer falar com a gente" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em] h-[159px]"></textarea>
+            <textarea id="descricao" placeholder="Por que você quer falar com a gente?" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em] h-[159px]"></textarea>
             <div className="w-full flex justify-end">
-              <button className="text-right py-[0.3em] px-[1em] text-[0.8em] bg-white text-[#FF6600] rounded-lg mt-[1em] hover:bg-[#fffc] transition-all disabled:bg-gray-600/20 disabled:text-gray-950/20 cursor-pointer " disabled={mensagemSucesso !== ''}>{loading ? (
+              <button className="text-right py-[0.3em] px-[1em] text-[0.8em] bg-white text-[#FF6600] rounded-lg mt-[1em] hover:bg-[#fffc] transition-all disabled:bg-gray-600/20 disabled:text-gray-950/20 cursor-pointer disabled:cursor-not-allowed " disabled={mensagemSucesso !== ''}>{loading ? (
                 <img src="/img/loader.png" alt="Load" className="w-[1.5em] animate-spin"/>
               ) : (
                 'Enviar'
