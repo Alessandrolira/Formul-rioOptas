@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const fontPoppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
+const poppins = Poppins({
+  subsets: ['latin'],
+  variable: '--font-poppins',
   weight: "500"
-})
+});
 
 export const metadata: Metadata = {
   title: "Forms Optas",
@@ -26,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fontPoppins.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} antialiased`}
       >
         {children}
       </body>
