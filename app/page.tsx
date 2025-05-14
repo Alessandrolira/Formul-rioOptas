@@ -67,6 +67,13 @@ if (aceitouTermos == false) {
     return;
   }
 
+  console.log(event.target.nome.value)
+  console.log(event.target.telefone.value)
+  console.log(event.target.email.value)
+  console.log(event.target.descricao.value)
+  console.log(dataAtual)
+  console.log(aceitouTermos)
+
   await fetch(baseUrl, {
     method:"POST",
     headers: {
