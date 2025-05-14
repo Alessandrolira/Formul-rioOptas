@@ -74,7 +74,6 @@ if (aceitouTermos == false) {
     },
     body:(`nome=${event.target.nome.value}&telefone=${event.target.telefone.value}&email=${event.target.email.value}&descricao=${event.target.descricao.value}&date=${dataAtual}&termo=${aceitouTermos}`)
   }).then(res => res.text()).then(data => {
-    console.log(data)
     if (data == "200"){
       setLoading(false)
       setMensagemSucesso("Sua Mensagem foi adicionada com sucesso, um de nossos colaboradores entrará em contato com você em breve")
