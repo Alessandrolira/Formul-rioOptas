@@ -24,8 +24,29 @@ export default function Home() {
 
 const [mensagemSucesso, setMensagemSucesso] = useState('')
 const [loading, setLoading] = useState(false)
+const [aceitouTermos, setAceitouTermos] = useState(false)
+const [checkboxError, setCheckboxError] = useState(false)
+
+const handleCheck = (event:any) => {
+  if (event.target.checked) {
+    setAceitouTermos(true)
+  } else {
+    setAceitouTermos(false)
+  }
+
+  console.log(aceitouTermos)
+}
 
 const handleSubmit = async (event:any) => {
+
+  event.preventDefault();
+
+if (aceitouTermos == false) {
+  setCheckboxError(true)
+  return
+}
+
+  setCheckboxError(false)
 
   const data = new Date()
 
@@ -38,7 +59,6 @@ const handleSubmit = async (event:any) => {
   const dataAtual = `${dia}/${mes}/${ano} ${hora}:${minuto}`
 
   setLoading(true)
-  event.preventDefault();
   const baseUrl = process.env.NEXT_PUBLIC_API_KEY;
 
   if (!baseUrl) {
@@ -52,7 +72,7 @@ const handleSubmit = async (event:any) => {
     headers: {
       "Content-Type" : "application/x-www-form-urlencoded"
     },
-    body:(`nome=${event.target.nome.value}&telefone=${event.target.telefone.value}&email=${event.target.email.value}&descricao=${event.target.descricao.value}&date=${dataAtual}`)
+    body:(`nome=${event.target.nome.value}&telefone=${event.target.telefone.value}&email=${event.target.email.value}&descricao=${event.target.descricao.value}&date=${dataAtual}&termo=${event.target.checkboxConcordo.checked}`)
   }).then(res => res.text()).then(data => {
     console.log(data)
     if (data == "200"){
@@ -63,6 +83,7 @@ const handleSubmit = async (event:any) => {
 }
 
 useEffect(() => {
+  
 }, [loading])
   
 
@@ -80,16 +101,45 @@ useEffect(() => {
             </div>
           </div>
         ) : (
-          <h1 className="font-bold text-center mb-[2em]">Seja bem vindo! Estamos muito felizes de ter você aqui!</h1>
+          <div className="flex items-center mb-[0.5em]">
+            <h1 className="font-bold text-center">Seja bem vindo! Estamos muito felizes de ter você aqui!</h1>
+            <img src="favicon.ico" alt="" className="w-[100px]"/>
+          </div>
         )}
+        {checkboxError == true ? (
+          <div className="flex items-center relative p-[1em] w-[80%] ml-auto justify-between mr-auto mb-[-1.5em] text-center rounded-2xl bg-red-600 shadow-lg shadow-gray-500 inset-shadow-sm inset-shadow-red-500 animate-fade-down animate-once animate-ease-out animate-normal max-w-[400px] text-white">
+            Por favor, aceite os termos para continuar
+            <button className="right-[0.5em] top-[0.5em] text-white border py-[0.3em] px-[1em] rounded-lg" onClick={() => setCheckboxError(false)}>ok</button>
+          </div>
+        ) : ""}
         <div className="flex justify-center items-center bg-[#FF6600] p-[1em] = rounded-lg shadow-lg shadow-[#000]/40 max-w-[700px]">
           <form className="bg-[url('/img/background.png')] bg-center bg-cover bg-no-repeat text-white p-[1em] rounded-lg" onSubmit={handleSubmit}>
             <input type="text" placeholder="Nome ou Apelido" id="nome" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]" />
             <input type="email" placeholder="E-mail" id="email" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]"/>
             <input type="tel" placeholder="Telefone" id="telefone" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em]"/>
             <textarea id="descricao" placeholder="Por que você quer falar com a gente?" className="w-full bg-[#F9F9F9]/20 py-[0.3em] px-[0.8em] text-white rounded-lg mb-[0.5em] focus:outline focus:outline-[#ff6600] placeholder:text-white placeholder:text-[0.9em] h-[159px]"></textarea>
+            <label
+              className="flex flex-row items-center gap-2.5 dark:text-white light:text-black text-[0.8em]"
+            >
+              <input id="checkboxConcordo" type="checkbox" className="peer hidden" onChange={handleCheck}/>
+              <div
+                className="h-5 w-5 flex rounded-md border border-[#a2a1a833] light:bg-[#e8e8e8] dark:bg-[#fff] peer-checked:bg-orange-800 transition"
+              >
+                <svg
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  className="w-5 h-5 light:stroke-[#e8e8e8] dark:stroke-[#fff]"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 12.6111L8.92308 17.5L20 6.5"
+                  ></path>
+                </svg>
+              </div>
+              Concordo em enviar meus dados para a Optas Consultoria
+            </label>
             <div className="w-full flex justify-end">
-              <button className="text-right py-[0.3em] px-[1em] text-[0.8em] bg-white text-[#FF6600] rounded-lg mt-[1em] hover:bg-[#fffc] transition-all disabled:bg-gray-600/20 disabled:text-gray-950/20 cursor-pointer disabled:cursor-not-allowed " disabled={mensagemSucesso !== ''}>{loading ? (
+              <button className="text-right py-[0.3em] px-[1em] text-[0.8em] bg-white text-[#FF6600] rounded-lg mt-[1em] hover:bg-[#fffc] transition-all disabled:bg-gray-600/20 disabled:text-gray-950/20 cursor-pointer disabled:cursor-not-allowed " disabled={mensagemSucesso !== ''} >{loading ? (
                 <img src="/img/loader.png" alt="Load" className="w-[1.5em] animate-spin"/>
               ) : (
                 'Enviar'
