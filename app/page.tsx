@@ -72,7 +72,7 @@ if (aceitouTermos == false) {
     headers: {
       "Content-Type" : "application/x-www-form-urlencoded"
     },
-    body:(`nome=${event.target.nome.value}&telefone=${event.target.telefone.value}&email=${event.target.email.value}&descricao=${event.target.descricao.value}&date=${dataAtual}&termo=TRUE`)
+    body:(`nome=${event.target.nome.value}&telefone=${event.target.telefone.value}&email=${event.target.email.value}&descricao=${event.target.descricao.value}&date=${dataAtual}&termo=${aceitouTermos}`)
   }).then(res => res.text()).then(data => {
     if (data == "200"){
       setLoading(false)
